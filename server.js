@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000; // You can change this to your desired port
 
-const { setFacebook } = require("./smartcontractcalls/smartContractCalls.js")
+const { setFacebook, setLinkedin } = require("./smartcontractcalls/smartContractCalls.js")
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -40,8 +40,11 @@ app.post('/setSocial', async (req, res) => {
         if (platform === "facebook") {
             await setFacebook(address, data)
             res.status(200).json({ message: "success" })
+        } else if (platform === "linkedin") {
+            await setLinkedin(address, data)
+            res.status(200).json({ message: "success" })
         } else {
-            res.json({ message: "platform not supported" });
+            res.json({ message: "Platform not supported" });
         }
 
 

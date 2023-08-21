@@ -32,8 +32,21 @@ const setFacebook = async (address, data) => {
     }
 }
 
+const setLinkedin = async (address, data) => {
+    try {
+        let tx = await thecontract.setLinkedinID(address, data)
+        let result = await tx.wait()
+        console.log(result)
 
-module.exports = { setFacebook }
+        return result
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+
+module.exports = { setFacebook, setLinkedin }
 
 // setFacebook("0xFC78985EBC569796106dd4b350a3e0Ac6c5c110c", "MichaelJordan");
 
