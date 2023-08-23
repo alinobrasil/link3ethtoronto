@@ -19,6 +19,11 @@ app.use('/proxy', (req, res) => {
     proxy.web(req, res, { target: targetUrl });
 });
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
+
 
 // Middleware to parse JSON bodies
 app.use(express.json());
