@@ -8,7 +8,7 @@ const hre = require("hardhat");
 
 async function main() {
 
-    const myContractFactory = await hre.ethers.getContractFactory("UserProfiles");
+    const myContractFactory = await hre.ethers.getContractFactory("LinkThreeProfile");
     const myContract = await myContractFactory.deploy();
 
     await myContract.deployed();

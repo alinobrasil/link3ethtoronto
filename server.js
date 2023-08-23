@@ -1,58 +1,77 @@
 const express = require('express');
 const app = express();
-const port = 3000; // You can change this to your desired port
+const port = process.env.PORT || 4000;
 
-const { setFacebook, setLinkedin } = require("./smartcontractcalls/smartContractCalls.js")
+// const axios = require('axios');
+var path = require('path');
+
+
+
+const { setLinkedin } = require("./scripts/smartContractCalls.js")
+const { getLinkedInAccessToken, getLiteProfile } = require("./scripts/web2logins.js")
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Custom logic function
-function processCustomLogic(inputString) {
-    // Implement your custom logic here
-    // For example, let's reverse the input string
-    return inputString.split('').reverse().join('');
-}
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-// API endpoint to handle user input
-app.post('/process', (req, res) => {
+// Route to handle LinkedIn callback and redirect to frontend
+app.get('/linkedin/callback', async (req, res) => {
     try {
-        const inputString = req.body.inputString;
 
-        if (!inputString) {
-            return res.status(400).json({ error: 'Input string is required' });
-        }
+        console.log("\n\n\n\n-----------------------------------------------------")
+        const code = req.query.code;
+        console.log("\n\n-----------------code: ", code)
 
-        const result = processCustomLogic(inputString);
-        res.json({ result });
+        const access_token = await getLinkedInAccessToken(code);
+        console.log("got the access token: ", access_token)
+
+        const liteProfile = await getLiteProfile(access_token);
+        console.log(liteProfile)
+
+        res.status(200).json({ status: "success", data: liteProfile })
+
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).send('Internal server error');
     }
 });
 
-app.post('/setSocial', async (req, res) => {
+app.post('/setLinkedin', async (req, res) => {
     try {
-        const platform = req.body.platform;
+        //requires 2 parameters in request body: address and data
+        const code = req.body.code;
         const address = req.body.address;
-        const data = req.body.data;
 
-        if (platform === "facebook") {
-            await setFacebook(address, data)
-            res.status(200).json({ message: "success" })
-        } else if (platform === "linkedin") {
-            await setLinkedin(address, data)
-            res.status(200).json({ message: "success" })
-        } else {
-            res.json({ message: "Platform not supported" });
-        }
+        const accessToken = await getLinkedInAccessToken(code);
+        const liteProfile = await getLiteProfile(accessToken);
 
+        await setLinkedin(liteProfile, address)
+        res.status(200).json({ status: "success", data: liteProfile })
 
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+app.post('/setGithub', async (req, res) => {
+    try {
+        const address = req.body.address;
+        const github = req.body.github;
+
+        // Call the setGithub function with the provided parameters
+        // await setGithub(address, github);
+
+        res.status(200).json({ message: "success", received: `${github}   |   ${address}` })
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 // Start the server
 app.listen(port, () => {
