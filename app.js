@@ -1,14 +1,24 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 4000;
+const httpProxy = require('http-proxy');
 
 // const axios = require('axios');
 var path = require('path');
 
+const proxy = httpProxy.createProxyServer();
 
 
 const { setLinkedin } = require("./scripts/smartContractCalls.js")
 const { getLinkedInAccessToken, getLiteProfile } = require("./scripts/web2logins.js")
+
+app.use('/proxy', (req, res) => {
+    // Replace 'http://localhost:4000' with the appropriate base URL
+    // for your backend server
+    const targetUrl = `${req.protocol}://${req.get('host')}`;
+    proxy.web(req, res, { target: targetUrl });
+});
+
 
 // Middleware to parse JSON bodies
 app.use(express.json());
