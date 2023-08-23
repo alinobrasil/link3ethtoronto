@@ -11,6 +11,11 @@ module.exports = {
             url: process.env.SEPOLIA_RPC,
             accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY2],
         },
+        xdc: {
+            url: "https://erpc.apothem.network",
+            accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY2],
+        }
+
     },
     etherscan: {
         apiKey: {

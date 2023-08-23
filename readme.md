@@ -1,8 +1,13 @@
-
-This is the server API that handles the logic of verifying logins and executing smart contract calls. 
-
+# Backend API + Smart contracts
 
 
-The hardhat folder contains all the smart contract related files
-(.sol file and tests)
-You'll need to fill in private keys in the .env file
+## Hardhat
+The "hardhat" folder contains the smart contract, test and deployment scripts. To deploy, you'll need to fill private keys and RPC url in .env.
+
+## Backend API (Work in progress)
+This root folder has the backend API that is meant to...
+-verify a user's login to each platform (obtain code/token, query api)
+-call smart contract to store results
+
+Some parts are working but due to time, this was left incomplete.
+
