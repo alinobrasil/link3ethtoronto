@@ -8,7 +8,7 @@ async function getLinkedInAccessToken(authorizationCode) {
         code: authorizationCode,
         client_id: '86fceak5pj0zeh',
         client_secret: '3DscfcB2HUeQRHcZ',
-        redirect_uri: 'http://localhost:4000/linkedin/callback',
+        redirect_uri: 'http://localhost:3000/linkedin',
     });
 
     const tokenEndpoint = 'https://www.linkedin.com/oauth/v2/accessToken';

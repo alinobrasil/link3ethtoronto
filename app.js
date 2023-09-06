@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 const httpProxy = require('http-proxy');
 
 // const axios = require('axios');
@@ -54,17 +54,23 @@ app.get('/linkedin/callback', async (req, res) => {
     }
 });
 
-app.post('/setLinkedin', async (req, res) => {
+app.post('/linkedin', async (req, res) => {
     try {
         //requires 2 parameters in request body: address and data
         const code = req.body.code;
-        const address = req.body.address;
+        console.log("code: ", code)
+
+
+        // const address = req.body.address;
 
         const accessToken = await getLinkedInAccessToken(code);
-        const liteProfile = await getLiteProfile(accessToken);
 
-        await setLinkedin(liteProfile, address)
-        res.status(200).json({ status: "success", data: liteProfile })
+        console.log("accessToken: ", accessToken)
+
+        // const liteProfile = await getLiteProfile(accessToken);
+
+        // await setLinkedin(liteProfile, address)
+        res.status(200).json({ status: "success", data: accessToken })
 
     } catch (err) {
         console.error(err);
